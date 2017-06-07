@@ -8,7 +8,7 @@ cas client 提供了一个单点登出的功能,一般情况下很好使用。�
 
 
 ##使用demo
-	web.xml中配置
+###web.xml中配置
 
 	<listener>
 		<listener-class>com.aldb.cas.logout.extend.ClusterSingleSignOutHttpSessionListener</listener-class>
@@ -27,12 +27,14 @@ cas client 提供了一个单点登出的功能,一般情况下很好使用。�
 	</filter-mapping>
 
 
-	spring.xml中配置
+###spring.xml中配置
+
 	<bean id="ssoLogoutFilter" class="com.aldb.cas.logout.extend.ClusterSigleSignOutFilter">
 		<property name="casServerUrlPrefix" value="${sso.server.url}" />
 		<property name="clusterNodeUrls" value="${client.clusternodeurls}"></property>
 	</bean>
-	其中sso.server.url为cas服务器的地址，示例http://192.168.2.100:8080/cas;
+
+其中sso.server.url为cas服务器的地址，示例http://192.168.2.100:8080/cas;
 	client.clusternodeurls为所有单应用对应的节点地址列表，多个用英文逗号隔开,示例http://192.168.2.100:8060/test/,http://192.168.2.100:8070/test/；
 	
 	
