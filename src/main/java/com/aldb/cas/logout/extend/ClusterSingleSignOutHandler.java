@@ -234,6 +234,7 @@ public class ClusterSingleSignOutHandler {
         } else if (isBackChannelLogoutRequest(request)) {
             logger.trace("Received a back channel logout request");
             destroySession(request);
+          
             return false;
 
         } else if (isFrontChannelLogoutRequest(request)) {
@@ -248,6 +249,11 @@ public class ClusterSingleSignOutHandler {
 
         } else if (isLogoutRequestFromClusterNode(request)) {
             destorySessionFromClusterNode(request);
+            // redirection url to the CAS server
+            final String redirectionUrl = computeRedirectionToServer(request);
+            if (redirectionUrl != null) {
+                CommonUtils.sendRedirect(response, redirectionUrl);
+            }
             return false;
         } else {
             logger.trace("Ignoring URI for logout: {}", request.getRequestURI());
@@ -308,9 +314,11 @@ public class ClusterSingleSignOutHandler {
                 }
                 try {
                     session.invalidate();
+                   
                 } catch (final IllegalStateException e) {
                     logger.debug("Error invalidating session", e);
                 }
+                this.logoutStrategy.logout(request);
             }
         }
 
@@ -340,6 +348,7 @@ public class ClusterSingleSignOutHandler {
             // ignore if the session is already marked as invalid. Nothing we
             // can do!
         }
+        System.out.println("recordSesson,token="+token);
         sessionMappingStorage.addSessionById(token, session);
     }
 
