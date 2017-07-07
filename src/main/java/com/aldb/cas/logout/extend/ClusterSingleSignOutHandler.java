@@ -234,7 +234,7 @@ public class ClusterSingleSignOutHandler {
         } else if (isBackChannelLogoutRequest(request)) {
             logger.trace("Received a back channel logout request");
             destroySession(request);
-          
+
             return false;
 
         } else if (isFrontChannelLogoutRequest(request)) {
@@ -262,7 +262,7 @@ public class ClusterSingleSignOutHandler {
     }
 
     private void destoryAllSessionOfClusterNodes(String token) {
-    	//广播到所有节点
+        // 广播到所有节点
         System.out.println("destorySessionOfClusterNodes--begin");
         if (clusterNodeUrls != null) {
             String[] clusterNodeUrlArray = clusterNodeUrls.split(",");
@@ -288,7 +288,7 @@ public class ClusterSingleSignOutHandler {
     private boolean isLogoutRequestFromClusterNode(HttpServletRequest request) {
         String clusterNodes = request.getParameter(logoutClusterNodesParameterName);
         System.out.println("isLogoutRequestFromClusterNode begin---");
-        System.out.println("clusterNodes="+clusterNodes);
+        System.out.println("clusterNodes=" + clusterNodes);
         System.out.println("isLogoutRequestFromClusterNode end---");
         if (clusterNodes != null && "true".equals(clusterNodes)) {
             return true;
@@ -300,11 +300,11 @@ public class ClusterSingleSignOutHandler {
 
     private void destorySessionFromClusterNode(HttpServletRequest request) {
         System.out.println("destorySessionFromClusterNode begin---");
-        
+
         String token = request.getParameter(this.artifactParameterName);
-        System.out.println("token="+token);
-        System.out.println("destorySessionFromClusterNode end---");
-        
+        System.out.println("token=" + token);
+       
+
         if (CommonUtils.isNotBlank(token)) {
             final HttpSession session = sessionMappingStorage.removeSessionByMappingId(token);
             if (session != null) {
@@ -314,14 +314,14 @@ public class ClusterSingleSignOutHandler {
                 }
                 try {
                     session.invalidate();
-                   
+
                 } catch (final IllegalStateException e) {
                     logger.debug("Error invalidating session", e);
                 }
                 this.logoutStrategy.logout(request);
             }
         }
-
+        System.out.println("destorySessionFromClusterNode end---");
     }
 
     /**
@@ -348,7 +348,7 @@ public class ClusterSingleSignOutHandler {
             // ignore if the session is already marked as invalid. Nothing we
             // can do!
         }
-        System.out.println("recordSesson,token="+token);
+        System.out.println("recordSesson,token=" + token);
         sessionMappingStorage.addSessionById(token, session);
     }
 
